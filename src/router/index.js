@@ -1,8 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+// import BootstrapVue from "bootstrap-vue"; // 追記
 import Home from "../views/Home.vue";
+import Start from "../views/Start.vue";
 
 Vue.use(VueRouter);
+// Vue.use(BootstrapVue); // 追記
+
+// import "bootstrap/dist/css/bootstrap.css"; // 追記
+// import "bootstrap-vue/dist/bootstrap-vue.css"; // 追記
 
 const routes = [
   {
@@ -18,6 +24,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/start",
+    name: "Start",
+    component: Start
   }
 ];
 

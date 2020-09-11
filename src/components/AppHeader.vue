@@ -3,19 +3,13 @@
     <v-app-bar app dark>
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title>
-        <!-- <router-link to="/" class="main_name"> -->
         WikiAPI
-        <!-- </router-link> -->
       </v-toolbar-title>
       <v-tabs>
         <v-tab v-for="menuItem in menuItems" :key="menuItem" :to="menuItem.url">
           {{ menuItem.name }}
         </v-tab>
       </v-tabs>
-      <!-- <div id="nav">
-          <router-link to="/about">WikiAPIについて</router-link> |
-          <router-link to="/start">クイズを始める</router-link>
-        </div> -->
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" fixed temporary>
       <v-list nav dense>

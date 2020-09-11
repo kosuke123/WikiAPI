@@ -3,41 +3,62 @@
     <div id="app" class="start">
       <h2>ボタンをクリックして問題を始めてね！</h2>
       <div>
-        <div>
-          <v-btn
-            v-on:click="getContents()"
-            color="blue-grey"
-            class="ma-2 white--text"
-            :loading="loading3"
-            :disabled="loading3"
-            @click="loader = 'loading3'"
-          >
-            Let's start!
-            <!-- <v-icon right dark>mdi-cloud-upload</v-icon> -->
-          </v-btn>
-        </div>
-        <div v-show="words_tips">
-          <h2>関連ワードは・・・</h2>
-          <div class="back">
-            <h3
-              v-for="(word, index) in selectWords"
-              v-bind:key="`first-${index}`"
-            >
-              {{ word }}
-            </h3>
-          </div>
-          <h2>ヒントは・・・</h2>
-          <div class="back">
-            <h3
-              v-for="(category, index) in selectCategories"
-              v-bind:key="`second-${index}`"
-            >
-              {{ category }}
-            </h3>
-          </div>
-        </div>
+        <v-btn
+          v-on:click="getContents()"
+          color="blue-grey"
+          class="ma-2 white--text"
+          :loading="loading3"
+          :disabled="loading3"
+          @click="loader = 'loading3'"
+        >
+          Let's start!
+          <!-- <v-icon right dark>mdi-cloud-upload</v-icon> -->
+        </v-btn>
       </div>
 
+      <div v-show="words_hints">
+        <h2>関連ワードは・・・</h2>
+        <div class="back">
+          <h3
+            v-for="(word, index) in selectWords"
+            v-bind:key="`first-${index}`"
+          >
+            {{ word }}
+          </h3>
+        </div>
+        <div>
+          <div>
+            <v-btn @click="getAnswerLength">ヒント①</v-btn>
+          </div>
+          <div class="back">
+            <h3 v-show="Length">文字数は{{ answerLength }}文字</h3>
+          </div>
+        </div>
+        <div>
+          <div>
+            <v-btn @click="getCategory">ヒント②</v-btn>
+          </div>
+          <div class="back">
+            <h3 v-show="Category">
+              カテゴリーは、
+              <div
+                v-for="(category, index) in selectCategories"
+                v-bind:key="`second-${index}`"
+              >
+                {{ category }}
+              </div>
+            </h3>
+          </div>
+        </div>
+        <dir>
+          <div>
+            <v-btn @click="getInitial">ヒント③</v-btn>
+          </div>
+          <div class="back">
+            <h3 v-show="Initial">頭文字は、{{ initial }}</h3>
+          </div>
+        </dir>
+      </div>
       <div v-if="answer_button">
         <v-row justify="center" align-content="center">
           <v-col cols="12" sm="6">
@@ -88,13 +109,19 @@ export default {
       title: "",
       wiki_title: false, //追加
       answer_button: false, //追加
-      words_tips: false, //ワードとヒント用追加
+      words_hints: false, //ワード追加
+      tips: false, //ヒント追加
+      Length: false, //文字数追加
+      Category: false, //カテゴリーヒント追加
+      Initial: false, //イニシャルヒント追加
       answerText: "",
       categories: [],
       selectCategories: [],
       answerURL: "",
       loader: null, //追加
-      loading3: false //追加
+      loading3: false, //追加
+      initial: "", //頭文字String型
+      answerLength: 0 //文字数int型
     };
   },
   //追加ここから
@@ -127,11 +154,11 @@ export default {
         console.log(this.content);
         this.getWords(this.content);
         this.randomWordsSelect(); //
-        this.randomCategoriesSelect(); //
+        this.getHint(); //ヒントを一つのメソッドにまとめました
         var target = document.getElementById("answer"); //
         target.href = this.answerURL; //
       });
-      this.words_tips = true; //ワードとヒントを表示させる
+      this.words_hints = true; //ワードとヒントを表示させる
       this.answer_button = true; //追加
     },
     getWords: function(str) {
@@ -191,7 +218,7 @@ export default {
         .slice(0, 9);
       console.log(this.selectWords);
     },
-    randomCategoriesSelect: function() {
+    getHint: function() {
       this.selectCategories = this.categories
         .slice()
         .sort(function() {
@@ -199,6 +226,20 @@ export default {
         })
         .slice(0, 3);
       console.log(this.selectCategories);
+
+      this.initial = this.title.substr(0, 1);
+      this.answerLength = this.title.trim().length;
+      console.log(this.initial);
+      console.log(this.answerLength);
+    },
+    getAnswerLength: function() {
+      this.Length = true;
+    },
+    getCategory: function() {
+      this.Category = true;
+    },
+    getInitial: function() {
+      this.Initial = true;
     }
     //ここまで
   }

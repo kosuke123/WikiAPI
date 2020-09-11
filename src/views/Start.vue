@@ -26,7 +26,8 @@
             {{ word }}
           </h3>
         </div>
-        <div>
+        <v-row justify="center" align-content="center">
+        <div class="px-4 py-2">
           <div>
             <v-btn @click="getAnswerLength">ヒント①</v-btn>
           </div>
@@ -34,13 +35,13 @@
             <h3 v-show="Length">文字数は{{ answerLength }}文字</h3>
           </div>
         </div>
-        <div>
+        <div class="px-4 py-2">
           <div>
             <v-btn @click="getCategory">ヒント②</v-btn>
           </div>
           <div class="back">
             <h3 v-show="Category">
-              カテゴリーは、
+              カテゴリーは
               <div
                 v-for="(category, index) in selectCategories"
                 v-bind:key="`second-${index}`"
@@ -50,14 +51,16 @@
             </h3>
           </div>
         </div>
-        <dir>
+        <dir class="px-4 py-2">
           <div>
             <v-btn @click="getInitial">ヒント③</v-btn>
           </div>
           <div class="back">
-            <h3 v-show="Initial">頭文字は、{{ initial }}</h3>
+            <h3 v-show="Initial">頭文字は{{ initial }}</h3>
           </div>
         </dir>
+                </v-row>
+
       </div>
       <div v-if="answer_button">
         <v-row justify="center" align-content="center">
@@ -91,7 +94,7 @@
           答えを見る
         </v-btn>
         <h2 class="answer_size">
-          <a id="answer" v-show="wiki_title" target="_blank">A.{{ title }}</a>
+          <a id="answer" v-show="wiki_title" target="_blank">A. {{ title }}</a>
           <!-- target="_blank"で新しいタブで開く -->
         </h2>
         <!-- v-ifがhtmlから削除されるのに対してv-showはcssスタイルのdisplay: noneで見えなくしているだけ -->

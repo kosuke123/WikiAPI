@@ -3,37 +3,45 @@
     <div id="app" class="start">
       <h2>ボタンをクリックして問題を始めてね！</h2>
       <div>
-        <v-btn
-          v-on:click="getContents()"
-          color="blue-grey"
-          class="ma-2 white--text"
-        >
-          Let's start!
-          <v-icon right dark>mdi-cloud-upload</v-icon>
-        </v-btn>
-        <h3>ワードは、</h3>
-        <h3 v-for="(word, index) in words" :key="index">
-          {{ word }}
-        </h3>
-        <h3>ヒントは、</h3>
-        <h3 v-for="(category, index) in categories" :key="index">
-          {{ category }}
-        </h3>
-        <!-- <h3>ワードは、</h3>
-      <h3>{{ "→" + this.words }}</h3>
-      <h3>ヒントは、</h3>
-      <h3>{{ "→" + this.categories }}</h3> -->
+        <div>
+          <v-btn
+            v-on:click="getContents()"
+            color="blue-grey"
+            class="ma-2 white--text"
+            :loading="loading3"
+            :disabled="loading3"
+            @click="loader = 'loading3'"
+          >
+            Let's start!
+            <!-- <v-icon right dark>mdi-cloud-upload</v-icon> -->
+          </v-btn>
+        </div>
+        <div v-show="words_tips">
+          <h2>関連ワードは・・・</h2>
+          <div class="back">
+            <h3
+              v-for="(word, index) in selectWords"
+              v-bind:key="`first-${index}`"
+            >
+              {{ word }}
+            </h3>
+          </div>
+          <h2>ヒントは・・・</h2>
+          <div class="back">
+            <h3
+              v-for="(category, index) in selectCategories"
+              v-bind:key="`second-${index}`"
+            >
+              {{ category }}
+            </h3>
+          </div>
+        </div>
       </div>
+
       <div v-if="answer_button">
         <v-row justify="center" align-content="center">
           <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="answerText"
-              solo
-              :rules="nameRules"
-              label="Answer"
-              required
-            >
+            <v-text-field v-model="answerText" solo label="Answer" required>
               <template v-slot:append-outer>
                 <v-btn color="primary" dark v-on:click="checkAnswer()"
                   >回答
@@ -50,7 +58,9 @@
       <!-- ここに「不正解」が入る -->
       <!-- ↑追加 -->
       <div>
+        <!--↓vuetifyのpaddingmarginの書き方-->
         <v-btn
+          class="mt-6"
           rounded
           color="primary"
           dark
@@ -59,8 +69,11 @@
         >
           答えを見る
         </v-btn>
-        <h2 v-if="wiki_title">{{ "正解は" + this.title }}</h2>
-        <!-- <h3 v-if="wiki_title">{{ "解説" + this.content }}</h3> -->
+        <h2 class="answer_size">
+          <a id="answer" v-show="wiki_title" target="_blank">A.{{ title }}</a>
+          <!-- target="_blank"で新しいタブで開く -->
+        </h2>
+        <!-- v-ifがhtmlから削除されるのに対してv-showはcssスタイルのdisplay: noneで見えなくしているだけ -->
       </div>
     </div>
   </v-app>
@@ -75,10 +88,28 @@ export default {
       title: "",
       wiki_title: false, //追加
       answer_button: false, //追加
+      words_tips: false, //ワードとヒント用追加
       answerText: "",
-      categories: []
+      categories: [],
+      selectCategories: [],
+      answerURL: "",
+      loader: null, //追加
+      loading3: false //追加
     };
   },
+  //追加ここから
+  watch: {
+    loader() {
+      const l = this.loader;
+      this[l] = !this[l];
+
+      setTimeout(() => (this[l] = false), 3000);
+
+      this.loader = null;
+    }
+  },
+  //ここまで
+  //参考url https://vuetifyjs.com/ja/components/buttons/
   computed: {},
   methods: {
     getContents: function() {
@@ -91,10 +122,16 @@ export default {
         this.content = res.data.query.pages[pageId].revisions[0]["*"];
         this.title = res.data.query.pages[pageId].title;
         this.content = res.data.query.pages[pageId].revisions[0]["*"];
+        this.answerURL = "https://ja.wikipedia.org/wiki/" + this.title; //
         console.log(this.title);
         console.log(this.content);
         this.getWords(this.content);
+        this.randomWordsSelect(); //
+        this.randomCategoriesSelect(); //
+        var target = document.getElementById("answer"); //
+        target.href = this.answerURL; //
       });
+      this.words_tips = true; //ワードとヒントを表示させる
       this.answer_button = true; //追加
     },
     getWords: function(str) {
@@ -136,14 +173,34 @@ export default {
         console.log("正解！");
         var correct = document.getElementById("correct");
         correct.innerHTML = "まじすごい正解！";
+        this.wiki_title = true; //「答えを見る」の中身も表示
       } else {
         console.log("残念！");
         var incorrect = document.getElementById("incorrect");
         incorrect.innerHTML = "残念不正解！";
       }
       this.answerText = "";
-      this.wiki_title = true; //「答えを見る」の中身も表示
-    } //追加
+      // this.wiki_title = true; //「答えを見る」の中身も表示
+    }, //追加
+    randomWordsSelect: function() {
+      this.selectWords = this.words
+        .slice()
+        .sort(function() {
+          return Math.random() - 0.5;
+        })
+        .slice(0, 9);
+      console.log(this.selectWords);
+    },
+    randomCategoriesSelect: function() {
+      this.selectCategories = this.categories
+        .slice()
+        .sort(function() {
+          return Math.random() - 0.5;
+        })
+        .slice(0, 3);
+      console.log(this.selectCategories);
+    }
+    //ここまで
   }
 };
 </script>
@@ -163,11 +220,60 @@ button:hover {
   padding-bottom: 30px; /*ヘッダーとフッターの高さの分調節-->*/
 }
 
+.back {
+  border-radius: 80px 80px;
+  background-color: greenyellow;
+  display: inline-block;
+}
+
 #correct {
-  color: red;
+  color: greenyellow;
 }
 
 #incorrect {
-  color: blue;
+  color: red;
 }
+
+//追加ここから
+.custom-loader {
+  animation: loader 1s infinite;
+  display: flex;
+}
+@-moz-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-o-keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes loader {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.answer_size {
+  padding-top: 20px;
+}
+//ここまで
 </style>

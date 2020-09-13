@@ -60,4 +60,8 @@ export default {
     display: block !important;
   }
 }
+
+// header {
+//   margin-bottom: 30px;
+// }
 </style>

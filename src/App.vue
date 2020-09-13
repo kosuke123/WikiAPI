@@ -3,9 +3,9 @@
     <div id="app">
       <AppHeader />
       <v-content>
-        <router-view class="screen_adjustment" />
+        <router-view />
       </v-content>
-      <footer class="footer"></footer>
+      <AppFooter />
     </div>
   </v-app>
 </template>
@@ -13,11 +13,13 @@
 <script>
 // import HelloWorld from "./components/HelloWorld";
 import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
 
 export default {
   name: "App",
   components: {
-    AppHeader
+    AppHeader,
+    AppFooter
   }
 };
 </script>
@@ -34,6 +36,8 @@ export default {
   text-align: center;
   align-items: center;
   color: #2c3e50;
+  // padding-bottom: 30px; /*←footerの高さ*/
+  // box-sizing: border-box; //この二つはfooterが被らないように調節したもの 参考リンク→https://techacademy.jp/magazine/19410
 }
 
 #nav {
@@ -96,15 +100,25 @@ export default {
   text-decoration: none;
 }
 
-footer {
-  color: white;
-  height: 30px;
-  background-color: black;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.footer {
+  margin: auto;
 }
+// footer {
+//   color: white;
+//   height: 30px;
+//   background-color: black;
+//   position: absolute;
+//   position: fixed;
+//   bottom: 0;
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   // margin-top: 50px;
+//   // padding-bottom: 30px; /*←footerの高さ*/
+//   box-sizing: border-box;
+//   p {
+//     padding-top: 45px;
+//   }
+// }
 </style>

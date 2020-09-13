@@ -1,105 +1,116 @@
 <template>
   <v-app>
-    <div id="app" class="start">
-      <h2>ボタンをクリックして問題を始めてね！</h2>
-      <div>
-        <v-btn
-          v-on:click="getContents()"
-          color="blue-grey"
-          class="ma-2 white--text"
-          :loading="loading3"
-          :disabled="loading3"
-          @click="loader = 'loading3'"
-        >
-          Let's start!
-          <!-- <v-icon right dark>mdi-cloud-upload</v-icon> -->
-        </v-btn>
-      </div>
+    <section class="start-image">
+      <v-container fluid fill-height class="start-image__content">
+        <div id="app" class="start">
+          <h2>さあ挑戦してみよう！</h2>
+          <div>
+            <v-btn
+              v-on:click="getContents()"
+              color="primary"
+              class="ma-2 white--text"
+              :loading="loading3"
+              :disabled="loading3"
+              @click="loader = 'loading3'"
+            >
+              Let's start!
+              <!-- <v-icon right dark>mdi-cloud-upload</v-icon> -->
+            </v-btn>
+          </div>
 
-      <div v-show="words_hints">
-        <h2>関連ワードは・・・</h2>
-        <div class="back">
-          <h3
-            v-for="(word, index) in selectWords"
-            v-bind:key="`first-${index}`"
-          >
-            {{ word }}
-          </h3>
-        </div>
-        <v-row justify="center" align-content="center">
-        <div class="px-4 py-2">
-          <div>
-            <v-btn @click="getAnswerLength">ヒント①</v-btn>
-          </div>
-          <div class="back">
-            <h3 v-show="Length">文字数は{{ answerLength }}文字</h3>
-          </div>
-        </div>
-        <div class="px-4 py-2">
-          <div>
-            <v-btn @click="getCategory">ヒント②</v-btn>
-          </div>
-          <div class="back">
-            <h3 v-show="Category">
-              カテゴリーは
-              <div
-                v-for="(category, index) in selectCategories"
-                v-bind:key="`second-${index}`"
+          <div v-show="words_hints" class="question">
+            <h2>関連ワードは・・・</h2>
+            <div class="back all">
+              <h3
+                v-for="(word, index) in selectWords"
+                v-bind:key="`first-${index}`"
               >
-                {{ category }}
+                {{ word }}
+              </h3>
+            </div>
+            <v-row justify="center" align-content="center">
+              <div class="px-4 py-4">
+                <div>
+                  <v-btn @click="getAnswerLength" rounded color="primary" dark
+                    >ヒント①</v-btn
+                  >
+                </div>
+                <div class="back">
+                  <h3 v-show="Length">文字数は、{{ answerLength }}文字</h3>
+                </div>
               </div>
-            </h3>
+              <div class="px-4 py-4">
+                <div>
+                  <v-btn @click="getCategory" rounded color="primary" dark
+                    >ヒント②</v-btn
+                  >
+                </div>
+                <div class="back">
+                  <h3 v-show="Category">
+                    カテゴリーは、
+                    <div
+                      v-for="(category, index) in selectCategories"
+                      v-bind:key="`second-${index}`"
+                    >
+                      {{ category }}
+                    </div>
+                  </h3>
+                </div>
+              </div>
+              <dir class="px-4 py-4">
+                <div>
+                  <v-btn @click="getInitial" rounded color="primary" dark
+                    >ヒント③</v-btn
+                  >
+                </div>
+                <div class="back">
+                  <h3 v-show="Initial">頭文字は、{{ initial }}</h3>
+                </div>
+              </dir>
+            </v-row>
+          </div>
+          <div v-if="answer_button">
+            <v-row justify="center" align-content="center">
+              <v-col cols="12" sm="6">
+                <v-text-field v-model="answerText" solo label="Answer" required>
+                  <template v-slot:append-outer>
+                    <v-btn color="primary" dark v-on:click="checkAnswer()"
+                      >回答
+                    </v-btn>
+                  </template>
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </div>
+          <!-- ↑追加 -->
+          <h1 id="correct"></h1>
+          <!-- ここに「正解」が入る -->
+          <h1 id="incorrect"></h1>
+          <!-- ここに「不正解」が入る -->
+          <!-- ↑追加 -->
+          <div class="answer_area" v-show="answer_Area">
+            <!--↓vuetifyのpaddingmarginの書き方-->
+            <v-btn
+              class="mt-6"
+              rounded
+              color="primary"
+              dark
+              v-if="answer_button"
+              v-on:click="showAnswer()"
+            >
+              答えを見る
+            </v-btn>
+            <h2 class="answer_size">
+              <a id="answer" v-show="wiki_title" target="_blank"
+                >A. {{ title }}</a
+              >
+              <!-- target="_blank"で新しいタブで開く -->
+            </h2>
+            <!-- v-ifがhtmlから削除されるのに対してv-showはcssスタイルのdisplay: noneで見えなくしているだけ -->
           </div>
         </div>
-        <dir class="px-4 py-2">
-          <div>
-            <v-btn @click="getInitial">ヒント③</v-btn>
-          </div>
-          <div class="back">
-            <h3 v-show="Initial">頭文字は{{ initial }}</h3>
-          </div>
-        </dir>
-                </v-row>
-
-      </div>
-      <div v-if="answer_button">
-        <v-row justify="center" align-content="center">
-          <v-col cols="12" sm="6">
-            <v-text-field v-model="answerText" solo label="Answer" required>
-              <template v-slot:append-outer>
-                <v-btn color="primary" dark v-on:click="checkAnswer()"
-                  >回答
-                </v-btn>
-              </template>
-            </v-text-field>
-          </v-col>
-        </v-row>
-      </div>
-      <!-- ↑追加 -->
-      <h2 id="correct"></h2>
-      <!-- ここに「正解」が入る -->
-      <h2 id="incorrect"></h2>
-      <!-- ここに「不正解」が入る -->
-      <!-- ↑追加 -->
-      <div>
-        <!--↓vuetifyのpaddingmarginの書き方-->
-        <v-btn
-          class="mt-6"
-          rounded
-          color="primary"
-          dark
-          v-if="answer_button"
-          v-on:click="showAnswer()"
-        >
-          答えを見る
-        </v-btn>
-        <h2 class="answer_size">
-          <a id="answer" v-show="wiki_title" target="_blank">A. {{ title }}</a>
-          <!-- target="_blank"で新しいタブで開く -->
-        </h2>
-        <!-- v-ifがhtmlから削除されるのに対してv-showはcssスタイルのdisplay: noneで見えなくしているだけ -->
-      </div>
-    </div>
+      </v-container>
+    </section>
   </v-app>
 </template>
 
@@ -124,7 +135,8 @@ export default {
       loader: null, //追加
       loading3: false, //追加
       initial: "", //頭文字String型
-      answerLength: 0 //文字数int型
+      answerLength: 0, //文字数int型
+      answerArea: false
     };
   },
   //追加ここから
@@ -163,6 +175,7 @@ export default {
       });
       this.words_hints = true; //ワードとヒントを表示させる
       this.answer_button = true; //追加
+      this.answer_Area = true;
     },
     getWords: function(str) {
       let array = str.split("");
@@ -202,12 +215,12 @@ export default {
       if (this.answerText == this.title) {
         console.log("正解！");
         var correct = document.getElementById("correct");
-        correct.innerHTML = "まじすごい正解！";
+        correct.innerHTML = "本当にすごい正解！";
         this.wiki_title = true; //「答えを見る」の中身も表示
       } else {
         console.log("残念！");
         var incorrect = document.getElementById("incorrect");
-        incorrect.innerHTML = "残念不正解！";
+        incorrect.innerHTML = "残念、不正解！";
       }
       this.answerText = "";
       // this.wiki_title = true; //「答えを見る」の中身も表示
@@ -250,6 +263,48 @@ export default {
 </script>
 
 <style lang="scss">
+.start-image {
+  // width: 60%;
+  // margin: 10px auto;
+}
+.start-image__content {
+  min-height: 100vh;
+  background: url("../assets/887752_l.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center center;
+  width: 100%;
+  height: 50vh;
+
+  /* ここから追加 */
+  @include display_pc {
+    height: 100vh;
+  }
+  /* ここまで追加 */
+
+  &-text {
+    color: white;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+
+    /* ここから追加 */
+    @include display_pc {
+      font-size: 40px;
+    }
+    /* ここまで追加 */
+  }
+}
+
+.question {
+  display: inline-block;
+  height: 100%;
+  background-color: #f1f1f1;
+  border: solid 2px black;
+  margin-top: 20px;
+  padding: 20px;
+}
+
 button {
   background-color: #333;
   color: #fff;
@@ -260,22 +315,34 @@ button:hover {
 }
 
 .start {
+  display: inline-block;
   padding-top: 100px;
   padding-bottom: 30px; /*ヘッダーとフッターの高さの分調節-->*/
+  width: 70%;
+  padding: 20px;
+  border: solid 1px black;
+  box-sizing: border-box;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: white;
 }
 
 .back {
   border-radius: 80px 80px;
-  background-color: greenyellow;
+  background-color: #00ccff;
   display: inline-block;
+  margin: 5px;
+  .all {
+    padding: 10px 10px;
+  }
 }
 
 #correct {
-  color: greenyellow;
+  color: red;
 }
 
 #incorrect {
-  color: red;
+  color: blue;
 }
 
 //追加ここから
@@ -318,6 +385,15 @@ button:hover {
 
 .answer_size {
   padding-top: 20px;
+  padding-bottom: 20px;
 }
+
+.answer_area {
+  display: inline-block;
+  border: solid 2px black;
+  width: 100%;
+  height: 100%;
+}
+
 //ここまで
 </style>

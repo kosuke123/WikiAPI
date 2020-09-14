@@ -53,26 +53,6 @@ export default {
   }
 }
 
-// header {
-//   background-color: white;
-//   /* background-image: url(unnamed.jpg); */
-//   background-repeat: no-repeat;
-//   background-position: 35% 10%;
-//   height: 65px;
-//   width: 90%;
-//   font-weight: bold;
-//   display: flex;
-//   position: fixed;
-//   top: 15px;
-//   left: 60px;
-//   border: solid 0.6px black;
-//   border-radius: 45px 45px;
-//   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.5);
-//   z-index: 10;
-//   justify-content: space-between;
-//   align-items: center;
-// }
-
 .v-toolbar__title {
   overflow: visible !important;
   margin-right: 50px !important;
@@ -103,22 +83,4 @@ export default {
 .footer {
   margin: auto;
 }
-// footer {
-//   color: white;
-//   height: 30px;
-//   background-color: black;
-//   position: absolute;
-//   position: fixed;
-//   bottom: 0;
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   // margin-top: 50px;
-//   // padding-bottom: 30px; /*←footerの高さ*/
-//   box-sizing: border-box;
-//   p {
-//     padding-top: 45px;
-//   }
-// }
 </style>

@@ -320,6 +320,7 @@ button:hover {
   padding-bottom: 30px; /*ヘッダーとフッターの高さの分調節-->*/
   width: 70%;
   padding: 20px;
+  margin-bottom: 60px;
   border: solid 1px black;
   box-sizing: border-box;
   margin-right: auto;

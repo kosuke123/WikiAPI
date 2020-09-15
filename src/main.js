@@ -9,6 +9,8 @@ Vue.config.productionTip = false;
 
 Vue.use(VueAxios, axios); //追記
 
+/* eslint-disable no-new */
+
 new Vue({
   router,
   vuetify,

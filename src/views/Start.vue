@@ -155,9 +155,18 @@ export default {
   computed: {},
   methods: {
     getContents: function() {
+      let url =
+        "https://ja.wikipedia.org/w/api.php?format=json&action=query&generator=random&grnnamespace=0&prop=revisions&rvprop=content&indexpageids";
+
+      // origin を本番環境と開発環境で切り替える
+      const origin =
+        process.env.NODE_ENV === "production"
+          ? "https://mlbteam-dc1f0.web.app/"
+          : "*";
+      url += "&origin=" + origin;
+
       this.axios({
-        url:
-          "https://ja.wikipedia.org/w/api.php?format=json&action=query&generator=random&grnnamespace=0&prop=revisions&rvprop=content&indexpageids",
+        url,
         method: "GET"
       }).then(res => {
         const pageId = res.data.query.pageids[0];
@@ -173,6 +182,7 @@ export default {
         var target = document.getElementById("answer"); //
         target.href = this.answerURL; //
       });
+
       this.words_hints = true; //ワードとヒントを表示させる
       this.answer_button = true; //追加
       this.answer_Area = true;
@@ -263,10 +273,6 @@ export default {
 </script>
 
 <style lang="scss">
-.start-image {
-  // width: 60%;
-  // margin: 10px auto;
-}
 .start-image__content {
   min-height: 100vh;
   background: url("../assets/887752_l.jpg");

@@ -157,16 +157,8 @@ export default {
     getContents: function() {
       let url =
         "https://ja.wikipedia.org/w/api.php?format=json&action=query&generator=random&grnnamespace=0&prop=revisions&rvprop=content&indexpageids";
-
       // origin を本番環境と開発環境で切り替える
       url += "&origin=*";
-      // const origin =
-      //   process.env.NODE_ENV === "production"
-      //     ? "https://mlbteam-dc1f0.web.app/"
-      //     : "*";
-      // url += "&origin=" + origin;
-
-      // fetch(url);
 
       this.axios({
         url,

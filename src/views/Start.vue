@@ -169,8 +169,8 @@ export default {
         this.title = res.data.query.pages[pageId].title;
         this.content = res.data.query.pages[pageId].revisions[0]["*"];
         this.answerURL = "https://ja.wikipedia.org/wiki/" + this.title; //
-        console.log(this.title);
-        console.log(this.content);
+        //console.log(this.title);
+        //console.log(this.content);
         this.getWords(this.content);
         this.randomWordsSelect(); //
         this.getHint(); //ヒントを一つのメソッドにまとめました
@@ -209,8 +209,8 @@ export default {
           }
         }
       }
-      console.log(this.words);
-      console.log(this.categories);
+      // console.log(this.words);
+      // console.log(this.categories);
     },
     //追加
     showAnswer: function() {
@@ -218,12 +218,12 @@ export default {
     },
     checkAnswer: function() {
       if (this.answerText == this.title) {
-        console.log("正解！");
+        //console.log("正解！");
         var correct = document.getElementById("correct");
         correct.innerHTML = "本当にすごい正解！";
         this.wiki_title = true; //「答えを見る」の中身も表示
       } else {
-        console.log("残念！");
+        //console.log("残念！");
         var incorrect = document.getElementById("incorrect");
         incorrect.innerHTML = "残念、不正解！";
       }
@@ -237,7 +237,7 @@ export default {
           return Math.random() - 0.5;
         })
         .slice(0, 9);
-      console.log(this.selectWords);
+      //console.log(this.selectWords);
     },
     getHint: function() {
       this.selectCategories = this.categories
@@ -246,12 +246,12 @@ export default {
           return Math.random() - 0.5;
         })
         .slice(0, 3);
-      console.log(this.selectCategories);
+      //console.log(this.selectCategories);
 
       this.initial = this.title.substr(0, 1);
       this.answerLength = this.title.trim().length;
-      console.log(this.initial);
-      console.log(this.answerLength);
+      //console.log(this.initial);
+      //console.log(this.answerLength);
     },
     getAnswerLength: function() {
       this.Length = true;
